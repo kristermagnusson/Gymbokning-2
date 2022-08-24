@@ -1,4 +1,5 @@
-﻿using Gymbokning_2.Models;
+﻿using Gymbokning_2.Data.Migrations;
+using Gymbokning_2.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace Gymbokning_2.Data
@@ -35,10 +36,8 @@ namespace Gymbokning_2.Data
                 EmailConfirmed = true,
                 UserName = adminEmail,
                 FirstName="Kalle",
-                LastName="Anka"
-              
-
-
+                LastName="Anka",
+                FullName= "Kalle Anka"
             };
 
 

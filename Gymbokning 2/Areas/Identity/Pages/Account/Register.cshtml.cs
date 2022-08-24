@@ -81,7 +81,7 @@ namespace Gymbokning_2.Areas.Identity.Pages.Account
 
             public string LastName { get; set; }
 
-            public string FullName => @"{FirstName} {LastName}";
+            public string FullName { get; set; }
 
             public DateTime TimeOfRegistration { get; set; }
             /// <summary>
@@ -132,6 +132,7 @@ namespace Gymbokning_2.Areas.Identity.Pages.Account
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
+                user.FullName = $"{Input.FirstName} {Input.LastName}";
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)

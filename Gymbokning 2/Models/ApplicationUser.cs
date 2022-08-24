@@ -6,7 +6,8 @@ namespace Gymbokning_2.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string FullName => @"{firstname} {lastName}";
-       
+        //public string FullName => @"{firstname} {lastName}";
+        //public string FullName => $"{FirstName} {LastName}";
+        public string FullName { get; set; }
     }
 }

@@ -7,6 +7,6 @@ namespace Gymbokning_2.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string FullName => @"{firstname} {lastName}";
-        public DateTime TimeOfRegistration { get; set; }
+       
     }
 }

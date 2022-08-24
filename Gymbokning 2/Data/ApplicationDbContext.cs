@@ -21,10 +21,21 @@ namespace Gymbokning_2.Data
 
             modelBuilder.Entity<ApplicationUserGymClass>()
                 .HasKey(t => new { t.ApplicationUserId, t.GymClassId });
-
+            modelBuilder.Entity<ApplicationUser>()
+                .Property<DateTime>("TimeOfRegistration");
         }
 
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            ChangeTracker.DetectChanges();
 
+            foreach (var entry in ChangeTracker.Entries<ApplicationUser>().Where(e => e.State == EntityState.Added))
+            {
+                entry.Property("TimeOfRegistration").CurrentValue = DateTime.Now;
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
+        }
 
 
     }

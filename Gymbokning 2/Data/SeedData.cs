@@ -36,6 +36,7 @@ namespace Gymbokning_2.Data
                 UserName = adminEmail,
                 FirstName="Kalle",
                 LastName="Anka"
+              
 
 
             };

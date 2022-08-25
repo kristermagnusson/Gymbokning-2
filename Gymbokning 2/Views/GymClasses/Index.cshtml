@@ -51,7 +51,9 @@
                     {
                         <a asp-action="Details" asp-route-id="@item.Id">Details</a> <span> | </span>
                     
-                        <a asp-action="BookingToggle" asp-route-id = "@item.Id" > BookingToggle </a > <span> | </span>}
+                       @if(item.Attending) {<a asp-action="BookingToggle" asp-route-id = "@item.Id" > Cansel </a > <span> | </span>}
+                        @if(!item.Attending) {<a asp-action="BookingToggle" asp-route-id = "@item.Id" > Book </a > <span> | </span>}
+                    }
 
                    
                     

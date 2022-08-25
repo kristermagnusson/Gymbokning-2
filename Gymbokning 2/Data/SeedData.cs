@@ -18,7 +18,7 @@ namespace Gymbokning_2.Data
             if (context is null)
                 throw new NullReferenceException(nameof(ApplicationDbContext));
             db = context;
-            // if (db.Users.Any()) return;
+            if (db.Users.Any()) return;                                                                 //togglar seed on off
             roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
             if (roleManager is null)
                 throw new NullReferenceException(nameof(RoleManager<IdentityRole>));

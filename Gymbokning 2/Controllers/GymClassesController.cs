@@ -9,6 +9,7 @@ using Gymbokning_2.Data;
 using Gymbokning_2.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Gymbokning_2.Models.ViewModels;
 
 namespace Gymbokning_2.Controllers
 {
@@ -28,20 +29,53 @@ namespace Gymbokning_2.Controllers
         // GET: GymClasses
         public async Task<IActionResult> Index()
         {
-            return _context.GymClass != null ?
-                        View(await _context.GymClass.ToListAsync()) :
-                        Problem("Entity set 'ApplicationDbContext.GymClass'  is null.");
+            var userId = userManger.GetUserId(User);
+            
+           // return _context.GymClass != null ?
+
+                var gymClasses= await _context.GymClasses
+                .Include(g => g.AttendingMembers)
+                .Select(g => new GymClassesViewModel
+                {
+                Id=g.Id,
+                Name=g.Name,
+                Duration=g.Duration,
+                Description=g.Description,
+                StartDate=g.StartDate,
+                Attending =g.AttendingMembers
+                .Any (a=> a.ApplicationUserId==userId)  
+                }).ToListAsync();
+
+
+
+            return View(gymClasses);
+                
+                
+                
+                // View(await _context.GymClass.ToListAsync()) :
+           // View(await _context.GymClasses.Include(g => g.AttendingMembers).ThenInclude(a => a.ApplicationUser).ToListAsync()) :
+
+            //            Problem("Entity set 'ApplicationDbContext.GymClass'  is null.");
         }
+
+
+
+
+
+
+
+
+
         [Authorize]
         // GET: GymClasses/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.GymClass == null)
+            if (id == null || _context.GymClasses == null)
             {
                 return NotFound();
             }
 
-            var gymClass = await _context.GymClass.Include(g => g.AttendingMembers).ThenInclude(a => a.ApplicationUser)
+            var gymClass = await _context.GymClasses.Include(g => g.AttendingMembers).ThenInclude(a => a.ApplicationUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (gymClass == null)
             {
@@ -78,12 +112,12 @@ namespace Gymbokning_2.Controllers
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.GymClass == null)
+            if (id == null || _context.GymClasses == null)
             {
                 return NotFound();
             }
 
-            var gymClass = await _context.GymClass.FindAsync(id);
+            var gymClass = await _context.GymClasses.FindAsync(id);
             if (gymClass == null)
             {
                 return NotFound();
@@ -131,12 +165,12 @@ namespace Gymbokning_2.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.GymClass == null)
+            if (id == null || _context.GymClasses == null)
             {
                 return NotFound();
             }
 
-            var gymClass = await _context.GymClass
+            var gymClass = await _context.GymClasses
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (gymClass == null)
             {
@@ -152,14 +186,14 @@ namespace Gymbokning_2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.GymClass == null)
+            if (_context.GymClasses == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.GymClass'  is null.");
             }
-            var gymClass = await _context.GymClass.FindAsync(id);
+            var gymClass = await _context.GymClasses.FindAsync(id);
             if (gymClass != null)
             {
-                _context.GymClass.Remove(gymClass);
+                _context.GymClasses.Remove(gymClass);
             }
 
             await _context.SaveChangesAsync();
@@ -168,7 +202,7 @@ namespace Gymbokning_2.Controllers
 
         private bool GymClassExists(int id)
         {
-            return (_context.GymClass?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.GymClasses?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
 
@@ -189,7 +223,7 @@ namespace Gymbokning_2.Controllers
             var att = await _context.ApplicationUserGyms.FirstOrDefaultAsync(a => a.ApplicationUserId == userId && a.GymClassId == id);
 
             //3
-            var pass = await _context.GymClass.Include(g => g.AttendingMembers).FirstOrDefaultAsync(a => a.Id == id);
+            var pass = await _context.GymClasses.Include(g => g.AttendingMembers).FirstOrDefaultAsync(a => a.Id == id);
             //Add null check
             if (pass == null) return NotFound();
 

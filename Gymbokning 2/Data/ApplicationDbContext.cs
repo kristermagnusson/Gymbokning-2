@@ -11,7 +11,7 @@ namespace Gymbokning_2.Data
             : base(options)
         {
         }
-        public DbSet<GymClass> GymClass { get; set; }
+        public DbSet<GymClass> GymClasses { get; set; }
         public DbSet<ApplicationUserGymClass> ApplicationUserGyms { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

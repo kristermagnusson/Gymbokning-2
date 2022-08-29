@@ -63,6 +63,36 @@ namespace Gymbokning_2.Controllers
 
 
 
+        [Authorize]
+        public async Task<IActionResult> Coming()
+        {
+            var userId = userManger.GetUserId(User);
+
+            // return _context.GymClass != null ?
+
+            var gymClasses = await _context.GymClasses
+            .Include(g => g.AttendingMembers)
+            .Select(g => new GymClassesViewModel
+            {
+                Id = g.Id,
+                Name = g.Name,
+                Duration = g.Duration,
+                Description = g.Description,
+                StartDate = g.StartDate,
+                Attending = g.AttendingMembers
+            .Any(a => a.ApplicationUserId == userId)
+            }).ToListAsync();
+
+
+
+            return View(gymClasses);
+
+
+
+        }
+
+
+
 
 
 
